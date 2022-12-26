@@ -1,0 +1,25 @@
+image: python:3.8
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - python setup.py sdist
+  artifacts:
+    paths:
+      - dist/
+
+test:
+  stage: test
+  script:
+    - python -m unittest discover
+
+deploy:
+  stage: deploy
+  script:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker build -t myapp .
